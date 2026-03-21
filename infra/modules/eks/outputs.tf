@@ -15,7 +15,7 @@ output "cluster_ca_certificate" {
 
 output "cluster_oidc_issuer_url" {
     description = "OIDC issuer URL for IRSA"
-    value = aws_eks_cluster.main.identity[0].oidc.issuer
+    value = aws_eks_cluster.main.identity[0].oidc[0].issuer
 }
 
 output "oidc_provider_arn" {
