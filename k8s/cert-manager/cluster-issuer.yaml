@@ -26,6 +26,7 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-production-key
     solvers:
-      - http01:
-          ingress:
-            class: nginx
+      - dns01:
+          route53:
+            region: eu-west-1
+            hostedZoneID: Z02462393D8VCU6NS7CEL
