@@ -1,0 +1,25 @@
+prometheus:
+  prometheusSpec:
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelector: {}
+    podMonitorNamespaceSelector: {}
+    podMonitorSelector: {}
+
+grafana:
+  enabled: true
+  adminPassword: "pass"
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-staging
+    hosts:
+      - host: grafana.bwaife.org
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.bwaife.org
+
+alertmanager:
+  enabled: true
+
