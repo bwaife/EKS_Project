@@ -7,14 +7,14 @@ prometheus:
 
 grafana:
   enabled: true
-  adminPassword: "pass"
+  adminPassword: pass
   ingress:
     enabled: true
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-staging
     hosts:
-      - host: grafana.bwaife.org
+      - grafana.bwaife.org
     tls:
       - secretName: grafana-tls
         hosts:
@@ -22,4 +22,3 @@ grafana:
 
 alertmanager:
   enabled: true
-
