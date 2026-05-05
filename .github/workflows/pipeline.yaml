@@ -44,12 +44,6 @@ jobs:
                 --exit-code 0 \
                 --format table
 
-            - name: Debug OIDC token
-              run: |
-                  echo "GitHub Repository: ${{ github.repository }}"
-                  echo "GitHub Ref: ${{ github.ref }}"
-                  echo "Expected sub: repo:${{ github.repository }}:ref:${{ github.ref }}"
-
     terraform:
             name: Terraform
             runs-on: ubuntu-latest
