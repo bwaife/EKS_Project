@@ -9,6 +9,8 @@ spec:
     repoURL: https://github.com/bwaife/microservices-demo
     targetRevision: main
     path: release
+    directory:
+      include: kubernetes-manifests.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: application
