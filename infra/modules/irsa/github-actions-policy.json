@@ -1,0 +1,22 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "eks:*",
+          "ec2:*",
+          "iam:*",
+          "s3:*",
+          "dynamodb:*",
+          "route53:*",
+          "acm:*",
+          "elasticloadbalancing:*",
+          "autoscaling:*",
+          "cloudwatch:*",
+          "logs:*"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
