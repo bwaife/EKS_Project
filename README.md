@@ -36,7 +36,7 @@ GitOps principles for automated, secure, and observable deployments.
 - Zero static credentials anywhere in the system
 
 ## Pipeline Flow
-\`\`\`
+```
 Push to main
       ↓
 Security scan — Checkov + Trivy
@@ -48,10 +48,11 @@ Terraform apply via OIDC
 Argo CD detects changes
       ↓
 Automatic cluster reconciliation
-\`\`\`
+```
+
 
 ## Project Structure
-\`\`\`
+```
 ├── infra/
 │   ├── bootstrap/     # Remote state setup
 │   ├── modules/
@@ -65,7 +66,7 @@ Automatic cluster reconciliation
 │   └── apps/          # Application manifests
 └── .github/
     └── workflows/     # CI/CD pipeline
-\`\`\`
+```
 
 ## How To Deploy
 ### Prerequisites
