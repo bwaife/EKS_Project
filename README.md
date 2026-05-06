@@ -76,32 +76,32 @@ Automatic cluster reconciliation
 - Helm installed
 
 ### Bootstrap Remote State
-\`\`\`bash
+```bash
 cd infra/bootstrap
 terraform init
 terraform apply
-\`\`\`
+```
 
 ### Deploy Infrastructure
-\`\`\`bash
+```bash
 cd infra
 terraform init
 terraform apply
-\`\`\`
+```
 
 ### Install Core Components
-\`\`\`bash
+```bash
 helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx --create-namespace
 helm install cert-manager cert-manager/cert-manager \
   --namespace cert-manager --create-namespace \
   --set crds.enabled=true
-\`\`\`
+```
 
 ### Connect Argo CD
-\`\`\`bash
+```bash
 kubectl apply -f k8s/argocd/application.yaml
-\`\`\`
+```
 
 ## Security Decisions
 - IRSA replaces node instance profiles — each pod assumes only its required role
