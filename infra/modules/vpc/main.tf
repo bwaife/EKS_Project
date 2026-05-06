@@ -1,102 +1,102 @@
 # Get available AZs in the region
 data "aws_availability_zones" "available" {
-    state = "available"
+  state = "available"
 }
 
 # Create VPC
 resource "aws_vpc" "main" {
-    cidr_block = var.vpc_cidr
-    enable_dns_hostnames = true
-    enable_dns_support = true
+  cidr_block           = var.vpc_cidr
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
-    tags = {
-      Name = "${var.project_name}-vpc"
-    }
+  tags = {
+    Name = "${var.project_name}-vpc"
+  }
 }
 
 # Internet Gateway
 resource "aws_internet_gateway" "main" {
-    vpc_id = aws_vpc.main.id 
+  vpc_id = aws_vpc.main.id
 
-    tags = {
-      Name = "${var.project_name}-igw"
-    }
+  tags = {
+    Name = "${var.project_name}-igw"
+  }
 }
 
 # Public Subnets 
 resource "aws_subnet" "public" {
-    count =  length(var.public_subnet_cidrs)
-    vpc_id = aws_vpc.main.id
-    cidr_block = var.public_subnet_cidrs[count.index]
-    availability_zone = data.aws_availability_zones.available.names[count.index]
+  count             = length(var.public_subnet_cidrs)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.public_subnet_cidrs[count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
-    map_public_ip_on_launch = true
+  map_public_ip_on_launch = true
 
-    tags = {
-      Name = "${var.project_name}-public-${count.index + 1}"
-      "kubernetes.io/role/elb" = "1"
-    }
+  tags = {
+    Name                     = "${var.project_name}-public-${count.index + 1}"
+    "kubernetes.io/role/elb" = "1"
+  }
 }
 
 # Private Subnets
 resource "aws_subnet" "private" {
-    count = length(var.private_subnet_cidrs)
-    vpc_id = aws_vpc.main.id
-    cidr_block = var.private_subnet_cidrs[count.index]
-    availability_zone = data.aws_availability_zones.available.names[count.index]
+  count             = length(var.private_subnet_cidrs)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.private_subnet_cidrs[count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
-    tags = {
-      Name = "${var.project_name}-private-${count.index + 1}"
-      "kubernetes.io/role/internal-elb" = "1"
-    }
+  tags = {
+    Name                              = "${var.project_name}-private-${count.index + 1}"
+    "kubernetes.io/role/internal-elb" = "1"
+  }
 }
 
 # Elastic IP for NAT Gateway
 resource "aws_eip" "nat" {
-    domain = "vpc"
+  domain = "vpc"
 
-    tags = {
-        Name = "${var.project_name}-nat-eip"
-    }
+  tags = {
+    Name = "${var.project_name}-nat-eip"
+  }
 }
 
 # NAT Gateway
 resource "aws_nat_gateway" "main" {
-    allocation_id = aws_eip.nat.id
-    subnet_id = aws_subnet.public[0].id
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public[0].id
 
-    tags = {
-        Name = "${var.project_name}-nat"
-    }
-    depends_on = [ aws_internet_gateway.main ]
+  tags = {
+    Name = "${var.project_name}-nat"
+  }
+  depends_on = [aws_internet_gateway.main]
 }
 
 # Public Route Table
 resource "aws_route_table" "public" {
-    vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.main.id
 
-    route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.main.id
-    }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
 
-    tags = {
-        Name = "${var.project_name}-public-rt"
-    }
+  tags = {
+    Name = "${var.project_name}-public-rt"
+  }
 }
 
 # Private Route Table
 resource "aws_route_table" "private" {
-    vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.main.id
 
-    route {
-        cidr_block = "0.0.0.0/0"
-        nat_gateway_id = aws_nat_gateway.main.id
-    }
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main.id
+  }
 
-    tags = {
-        Name = "${var.project_name}-private-rt"
-    }
+  tags = {
+    Name = "${var.project_name}-private-rt"
+  }
 }
 
 # Associate Public Subnets With Public Route Table
